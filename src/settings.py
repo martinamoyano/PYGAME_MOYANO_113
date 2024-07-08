@@ -1,4 +1,3 @@
-import pygame
 '''--------------------- SCREEN SETTINGS ------------------------'''
 
 WIDTH = 800

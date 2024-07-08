@@ -6,7 +6,8 @@ class Enemie(pygame.sprite.Sprite):
         super().__init__()
         
         self.orientacion = randint(1,2)
-        self.speed = 20
+        self.speed = 5
+        self.activo = True
 
         self.right_images = [
             pygame.image.load(r'src\enemigo_bolita\enemigo_bolita_0.png').convert_alpha(),
@@ -52,7 +53,7 @@ class Enemie(pygame.sprite.Sprite):
         if self.frame >= len(images):
             self.frame = 0
         return images[self.frame]
-
+    
     def update(self):
         if self.moving_left:
             self.image = self.get_frame(self.left_images)
@@ -77,7 +78,6 @@ class Enemie(pygame.sprite.Sprite):
             case 4:
                 self.rect.x = randint (50, width-50)
                 self.rect.top = height
-
 
     def movimiento(self, height, width):
         match self.orientacion:
@@ -112,5 +112,8 @@ class Enemie(pygame.sprite.Sprite):
                     self.rect.y -= self.speed 
                 else:
                     self.seleccionador_movimiento(height, width)
+
+    
+        
 
 

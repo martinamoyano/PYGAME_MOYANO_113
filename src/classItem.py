@@ -1,6 +1,6 @@
 import pygame
 
-class Coin:
+class Item:
     def __init__(self, dimension: tuple, centro: tuple, imagen: str) -> None:
         self.imagen = pygame.image.load(imagen)
         self.imagen = pygame.transform.scale(self.imagen, dimension)
@@ -52,3 +52,38 @@ class Coin:
     def set_centro(self, value: tuple):
         self.rect.center = value
 
+class Coin (Item):
+    def __init__(self, dimension: tuple, centro: tuple, imagen: str) -> None:
+        super().__init__(dimension, centro, imagen)
+
+class Projectile (Item):
+    def __init__(self, dimension: tuple, centro: tuple, imagen: str, movement: int) -> None:
+        super().__init__(dimension, centro, imagen)
+        self.movement = movement
+        self.speed = 15
+
+    def movimiento(self, height, width):
+        match self.movement:
+            case 1:
+                if self.rect.top <= height:
+                    self.rect.y += self.speed
+                else:
+                    self.activo = False
+            
+            case 2:
+                if self.rect.left <= width:
+                    self.rect.x += self.speed
+                else:
+                    self.activo = False
+            
+            case 3: 
+                if self.rect.left >= 0:
+                    self.rect.x -= self.speed 
+                else:
+                    self.activo = False
+
+            case 4: 
+                if self.rect.bottom >= 0:
+                    self.rect.y -= self.speed 
+                else:
+                    self.activo = False
