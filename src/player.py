@@ -81,11 +81,12 @@ class Panda(pygame.sprite.Sprite):
                     movimiento = 4
                 elif self.last_movement == 'down':
                     movimiento = 1
+                elif self.down_states[1]:
+                    movimiento = 1
                 
                 if self.projectiles > 0:
                     projectile = Projectile ((15,15), self.rect.center, r"src\panda_projectile.png", movimiento)
                     lista_balas.append(projectile)
-
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:

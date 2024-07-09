@@ -1,7 +1,7 @@
 import pygame
 from random import randint
 
-class Enemie(pygame.sprite.Sprite):
+class Enemy(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__()
         
