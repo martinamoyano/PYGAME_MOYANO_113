@@ -7,8 +7,9 @@ def main():
 	
     SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("PO GAME")    
-
+    menu (SCREEN)
     game(SCREEN)
 
 if __name__ == "__main__":
     main() 
+        

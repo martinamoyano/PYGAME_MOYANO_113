@@ -4,7 +4,6 @@ from random import randint
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__()
-        
         self.orientacion = randint(1,2)
         self.speed = 5
         self.activo = True
@@ -42,6 +41,9 @@ class Enemy(pygame.sprite.Sprite):
         self.moving_right = False
         self.moving_up = False
         self.moving_down = False
+        
+        self.enemy_sprites = pygame.sprite.Group()
+        self.enemy_sprites.add(self)
 
     def set_colorkey_images(self, color):
         for image_list in [self.right_images, self.left_images, self.down_images, self.up_images]:
@@ -68,15 +70,15 @@ class Enemy(pygame.sprite.Sprite):
         self.orientacion = randint (1,4)
         match self.orientacion:
             case 1:
-                self.rect.x = randint (50, width-50)
-                self.rect.bottom = 0 
+                self.rect.x = randint (50, width-50) #down
+                self.rect.bottom = 75 #limite bambu
             case 2:
-                self.rect.topright = (0, randint(50,height-50))
+                self.rect.topright = (0, randint(55,height-50)) #right
             case 3:
-                self.rect.y = randint(50, height - 50)  
+                self.rect.y = randint(50, height - 50)  #left
                 self.rect.left = width  
             case 4:
-                self.rect.x = randint (50, width-50)
+                self.rect.x = randint (50, width-50) #up
                 self.rect.top = height
 
     def movimiento(self, height, width):

@@ -2,9 +2,10 @@ import pygame
 from classItem import Projectile
 
 class Panda(pygame.sprite.Sprite):
-    def __init__(self, position, lives, projectiles, sprite_sheet: str):
+    def __init__(self, position, lives, score, speed, projectiles, sprite_sheet: str):
         self.lives = lives
-        self.score = 0
+        self.score = score
+        self.speed = speed
         self.projectiles = projectiles
         self.sheet = pygame.image.load(sprite_sheet)
         self.sheet = pygame.transform.scale(self.sheet, (141,192))
@@ -13,6 +14,7 @@ class Panda(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = position 
         self.frame = 0
+        self.activo = True
 
         self.down_states = { 0: (0, 0, 48, 48), 1: (48, 0, 48, 48), 2: (96, 0, 48, 48) }
         self.left_states = { 0: (0, 48, 48, 48), 1: (48, 48, 48, 48), 2: (96, 48, 48, 48)}
@@ -25,6 +27,12 @@ class Panda(pygame.sprite.Sprite):
         self.moving_down = False
         self.last_movement = ''
 
+    def get_activo(self):
+        return self.activo
+
+    def set_activo(self, value: bool):
+        self.activo = value
+
     def get_frame(self, frame_set):
         self.frame += 1
         if self.frame > (len(frame_set) - 1):
@@ -34,16 +42,16 @@ class Panda(pygame.sprite.Sprite):
     def update(self):
         if self.moving_left:
             self.clip(self.left_states)
-            self.rect.x -= 5
+            self.rect.x -= self.speed
         if self.moving_right:
             self.clip(self.right_states)
-            self.rect.x += 5
+            self.rect.x += self.speed
         if self.moving_up:
             self.clip(self.up_states)
-            self.rect.y -= 5
+            self.rect.y -= self.speed
         if self.moving_down:
             self.clip(self.down_states)
-            self.rect.y += 5
+            self.rect.y += self.speed
     
         self.image = self.sheet.subsurface(self.sheet.get_clip())
 
@@ -72,6 +80,7 @@ class Panda(pygame.sprite.Sprite):
                 self.moving_down = True
                 self.last_movement = 'down'
             if event.key == pygame.K_SPACE:
+
                 if self.projectiles > 0:
                     self.projectiles -= 1
                     if self.last_movement == 'left' :
@@ -84,9 +93,10 @@ class Panda(pygame.sprite.Sprite):
                         movimiento = 1
                     elif self.down_states[1]:
                         movimiento = 1
-                    
-                    projectile = Projectile ((15,15), self.rect.center, r"src\panda_projectile.png", movimiento)
+                
+                    projectile = Projectile ((20,20), self.rect.center, r"src\panda_projectile.png", movimiento)
                     lista_balas.append(projectile)
+                    
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:

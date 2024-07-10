@@ -11,15 +11,15 @@ def limites(player, width, height):
         player.rect.left = 0
     if player.rect.bottom > height - 10: #pongo '10' por el limite con el borde de bambus
         player.rect.bottom = height - 10
-    if player.rect.top < 0:
-        player.rect.top = 0
+    if player.rect.top < 60:
+        player.rect.top = 60
 
 '''------------------------ CARGAR LISTAS ------------------------------'''
 
 def cargar_coins (cantidad: int, width, height) -> list:
     coin_list = []
     for i in range (cantidad):
-        coin = Coin ((20,20), (randint(25,width-25),randint(25,height-25)), r"src\coin.png")
+        coin = Coin ((20,20), (randint(25,width-25),randint(68,height-25)), r"src\coin.png")
         coin_list.append(coin)
     return coin_list
 
@@ -56,7 +56,7 @@ def blitear_textos(screen, font, texto: str, posicion: tuple , color = (0, 0 ,0)
     textos = font.render (texto, True, color)
     screen.blit (textos, posicion)
 
-def blitear_imagen(screen, path, dimension: tuple, posicion: tuple) -> None:
+def blitear_imagen(screen, path, dimension: tuple, posicion: tuple) -> None :
     """
     Dibuja una imagen en pantalla en la posición especificada con el tamaño dado.
 
@@ -77,9 +77,6 @@ def blitear_cant_projectiles(screen, player):
     else:
         blitear_textos(screen, fuente(30), f'x0', (170,33))
 
-def blitear_score(screen, player):
-    blitear_textos(screen, fuente(30), f'Score: {player.score}', (650,33))
-
 def blitear_lives(screen, player):#MODULARIZAR
     lives_x = 25 
     for i in range(player.lives):
@@ -98,57 +95,6 @@ def blitear_disparos(screen, projectiles_list, height, width):
             screen.blit(projectil.get_imagen(), projectil.get_rect())
         else:
             projectiles_list.remove(projectil)
-
-#BLITEO PANTALLA GAME OVER
-def gameover_screen(screen) -> None:
-    screen.fill((255, 255, 255))
-    blitear_textos(screen, fuente(70), 'Game Over', (250, 250))
-    
-    pygame.display.flip()
-    pygame.time.delay(2000)
-
-#BLITEO PANTALLA GAME
-def game_screen(screen, player, fondo, enemy, coin_list, enemy_sprites, projectiles_list, extra_projectiles_list, extra_lives_list, width, height) -> None:
-    """
-    Muestra la pantalla de juego principal.
-
-    Args:
-        screen (pygame.Surface): La superficie de la pantalla de Pygame.
-        nivel (Game): Objeto Game que representa el estado del juego.
-        caja_texto (Text_box): Objeto Text_box para la caja de texto donde se ingresa la letra.
-        comodin_tiempo_extra (Comodin): Objeto Comodin para el comodín de tiempo extra.
-        comodin_revelar_letra (Comodin): Objeto Comodin para el comodín de revelar letra.
-        comodin_multiplicar_puntos (Comodin): Objeto Comodin para el comodín de multiplicar puntos.
-        matriz_letras (list): Lista de objetos Boton representando el teclado de letras.
-    """
-    screen.blit(fondo, (0,0))
-    
-    blitear_cant_projectiles(screen, player)
-
-    blitear_score(screen, player)
-
-    blitear_coins(screen, coin_list)
-
-    blitear_lives(screen, player)
-    
-    screen.blit(player.image, player.rect)
-    
-    for vidas in extra_lives_list:
-        if vidas.get_activo() == True:
-            screen.blit(vidas.get_imagen(), vidas.get_rect()) #####
-
-    for proyectil in extra_projectiles_list:
-        if proyectil.get_activo() == True:
-            screen.blit(proyectil.get_imagen(), proyectil.get_rect())
-
-    if enemy.activo == True:
-        enemy_sprites.draw(screen)
-        # enemy2_sprites.draw(screen)  
-
-    if len(projectiles_list) > 0:
-        blitear_disparos(screen, projectiles_list, height, width)
-
-    pygame.display.update()
 
 '''------------------------ COLISIONES ----------------------------'''
 
@@ -186,16 +132,25 @@ def coin_colision (coin_list, player):
     for coin in coin_list:
         if detectar_colision_circulo (coin.get_rect(), player.rect):
             coin.set_activo (False)
-            coin_list.remove(coin)
             player.score += 100
+            coin_list.remove (coin)
 
 def projectil_colision_enemy(projectiles_list, enemy, player):
     for projectile in projectiles_list:
         if detectar_colision_circulo (projectile.get_rect(), enemy.rect):
             projectile.set_activo (False)
             projectiles_list.remove(projectile)
-            player.score += 200
             enemy.activo = False
+            player.score += 200
+
+def booster_colision (booster, player, current_time, next_booster_spawn_time, booster_end_time):
+    if detectar_colision_circulo (booster.get_rect(), player.rect) and booster.get_activo():
+        booster.set_activo (False)
+        player.speed += 10
+        booster_end_time = current_time + 8000
+        next_booster_spawn_time = current_time + 10000 
+    
+    return next_booster_spawn_time, booster_end_time
 
 def live_colision(extra_lives_list, player):
     for live in extra_lives_list:
@@ -204,38 +159,22 @@ def live_colision(extra_lives_list, player):
             player.lives += 1
             extra_lives_list.remove(live)
 
-def projectil_extra_colision(extra_projectiles_list, player, panda_projectiles):
+def projectil_extra_colision(extra_projectiles_list, player):
     for proyectil in extra_projectiles_list:
         if detectar_colision_circulo(proyectil.get_rect(), player.rect):
             proyectil.set_activo(False)
             extra_projectiles_list.remove(proyectil)
-            player.projectiles = panda_projectiles  # Recarga los proyectiles con la cantidad inicial
-
-def colision_enemy(enemy, colisionando, player):
+            player.projectiles = 10
+            
+def colision_enemy(enemy, player):
     if detectar_colision_circulo(enemy.rect, player.rect):
-        if colisionando == False: 
+        if player.get_activo():
             player.lives -= 1
-            colisionando = True  
-            print(player.lives)
-    else:
-        colisionando = False  
-    
-    return colisionando
+            player.set_activo(False)
 
-def colisiones(player, enemy, colisionando, panda_projectiles, projectiles_list, extra_projectiles_list, coin_list, extra_lives_list):
-    
-    coin_colision(coin_list, player)
 
-    projectil_colision_enemy(projectiles_list, enemy, player) #con enemigo
 
-    projectil_extra_colision(extra_projectiles_list, player, panda_projectiles)
 
-    live_colision(extra_lives_list, player)
-
-    if enemy.activo == True:
-        colisionando = colision_enemy(enemy, colisionando, player)
-        return colisionando
-        # colisionando2 = colision_enemy(enemy_2, colisionando2, player)
 
     
 

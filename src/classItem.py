@@ -15,7 +15,7 @@ class Item:
     def set_imagen(self, value: str):
         self.imagen = pygame.image.load(value)
         self.imagen = pygame.transform.scale(self.imagen, self.dimension)
-        self.rect = self.imagen.get_rect()  # Actualizamos el rectángulo al cambiar la imagen
+        self.rect = self.imagen.get_rect() 
 
     def get_rect(self):
         return self.rect
@@ -50,6 +50,12 @@ class Live (Item):
     def __init__(self, dimension: tuple, centro: tuple, imagen: str) -> None:
         super().__init__(dimension, centro, imagen)
 
+class Booster (Item):
+    def __init__(self, dimension: tuple, centro: tuple, imagen: str) -> None:
+        super().__init__(dimension, centro, imagen)
+
+#################################QUITAR ESTA BASURA
+
 class Projectile (Item):
     def __init__(self, dimension: tuple, centro: tuple, imagen: str, movement: int ) -> None:
         super().__init__(dimension, centro, imagen)
@@ -59,25 +65,25 @@ class Projectile (Item):
     def movimiento(self, height, width):
         match self.movement:
             case 1:
-                if self.rect.top <= height:
+                if self.rect.top <= height: #down
                     self.rect.y += self.speed
                 else:
                     self.activo = False
             
             case 2:
-                if self.rect.left <= width:
+                if self.rect.left <= width: #right
                     self.rect.x += self.speed
                 else:
                     self.activo = False
             
             case 3: 
-                if self.rect.left >= 0:
+                if self.rect.left >= 0: #left
                     self.rect.x -= self.speed 
                 else:
                     self.activo = False
 
             case 4: 
-                if self.rect.bottom >= 0:
+                if self.rect.bottom >= 75: #up / 75 = borde bambu
                     self.rect.y -= self.speed 
                 else:
                     self.activo = False
