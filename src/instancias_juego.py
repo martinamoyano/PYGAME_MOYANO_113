@@ -11,7 +11,7 @@ def game (screen):
     clock = pygame.time.Clock()
 
     panda_projectiles = 10
-    player = Panda(SCREEN_CENTER, 3, 0, panda_projectiles, r"src\panda.png") 
+    player = Panda(SCREEN_CENTER, 3, panda_projectiles, r"src\panda.png") 
 
     enemy = Enemy(((WIDTH // 2), 25))
     enemy_sprites = pygame.sprite.Group()
@@ -33,7 +33,7 @@ def game (screen):
     extra_projectiles_list = []
 
     next_projectile_spawn_time = pygame.time.get_ticks() + randint(10000, 30000)
-    next_life_spawn_time = pygame.time.get_ticks() + randint(10000, 30000)  # Tiempo aleatorio inicial de aparición
+    next_life_spawn_time = pygame.time.get_ticks() + randint(10000, 30000)  
 
     is_running = True
     while is_running:
@@ -45,7 +45,7 @@ def game (screen):
                 
             player.handle_event(event, projectiles_list)
 
-        colisionando = colisiones (player, enemy, colisionando, projectiles_list, extra_projectiles_list, coin_list, extra_lives_list)
+        colisionando = colisiones (player, enemy, colisionando, panda_projectiles, projectiles_list, extra_projectiles_list, coin_list, extra_lives_list)
 
         if player.lives == 0:
             gameover_screen(screen)
@@ -74,7 +74,7 @@ def game (screen):
             next_life_spawn_time = current_time + randint(10000, 30000)  
         
         if player.projectiles == 0 and current_time >= next_projectile_spawn_time:
-            proyectil = Projectile((15, 15), (randint(10, WIDTH - 10), randint(10, HEIGHT - 10)), r"src\panda_projectile.png", 0)
+            proyectil = Projectile((15, 15), (randint(15, WIDTH - 15), randint(15, HEIGHT - 15)), r"src\panda_projectile.png", 1)
             extra_projectiles_list.append(proyectil)
             next_projectile_spawn_time = current_time + randint(10000, 30000)
 

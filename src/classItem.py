@@ -51,7 +51,7 @@ class Live (Item):
         super().__init__(dimension, centro, imagen)
 
 class Projectile (Item):
-    def __init__(self, dimension: tuple, centro: tuple, imagen: str, movement: int) -> None:
+    def __init__(self, dimension: tuple, centro: tuple, imagen: str, movement: int ) -> None:
         super().__init__(dimension, centro, imagen)
         self.movement = movement
         self.speed = 15

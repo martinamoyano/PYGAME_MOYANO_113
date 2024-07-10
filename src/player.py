@@ -2,9 +2,9 @@ import pygame
 from classItem import Projectile
 
 class Panda(pygame.sprite.Sprite):
-    def __init__(self, position, lives, coins, projectiles, sprite_sheet: str):
+    def __init__(self, position, lives, projectiles, sprite_sheet: str):
         self.lives = lives
-        self.coins = coins
+        self.score = 0
         self.projectiles = projectiles
         self.sheet = pygame.image.load(sprite_sheet)
         self.sheet = pygame.transform.scale(self.sheet, (141,192))
@@ -72,19 +72,19 @@ class Panda(pygame.sprite.Sprite):
                 self.moving_down = True
                 self.last_movement = 'down'
             if event.key == pygame.K_SPACE:
-                self.projectiles -= 1
-                if self.last_movement == 'left' :
-                    movimiento = 3
-                elif self.last_movement == 'right' :
-                    movimiento = 2
-                elif self.last_movement == 'up':
-                    movimiento = 4
-                elif self.last_movement == 'down':
-                    movimiento = 1
-                elif self.down_states[1]:
-                    movimiento = 1
-                
                 if self.projectiles > 0:
+                    self.projectiles -= 1
+                    if self.last_movement == 'left' :
+                        movimiento = 3
+                    elif self.last_movement == 'right' :
+                        movimiento = 2
+                    elif self.last_movement == 'up':
+                        movimiento = 4
+                    elif self.last_movement == 'down':
+                        movimiento = 1
+                    elif self.down_states[1]:
+                        movimiento = 1
+                    
                     projectile = Projectile ((15,15), self.rect.center, r"src\panda_projectile.png", movimiento)
                     lista_balas.append(projectile)
 
