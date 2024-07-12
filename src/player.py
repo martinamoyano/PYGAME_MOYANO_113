@@ -1,6 +1,9 @@
 import pygame
 from classItem import Projectile
 
+pygame.mixer.init()
+projetile_sound = pygame.mixer.Sound(r"src\sounds\projectile.mp3")
+
 class Panda(pygame.sprite.Sprite):
     def __init__(self, position, lives, score, speed, projectiles, sprite_sheet: str):
         self.lives = lives
@@ -96,6 +99,8 @@ class Panda(pygame.sprite.Sprite):
                 
                     projectile = Projectile ((20,20), self.rect.center, r"src\panda_projectile.png", movimiento)
                     lista_balas.append(projectile)
+                    projetile_sound.play()
+
                     
 
         if event.type == pygame.KEYUP:

@@ -3,7 +3,7 @@ class Boton:
     def __init__(self, origen: tuple, dimesion: tuple, path: str, path_colision: str) -> None:
         self.imagen_no_colision = path
         self.imagen = path
-        self.imagen_surface = pygame.image.load(path)
+        self.imagen_surface = pygame.image.load(path).convert_alpha()
         self.imagen_surface = pygame.transform.scale(self.imagen_surface, dimesion)
         self.imagen_colision = path_colision
         self.colision = False
@@ -11,6 +11,7 @@ class Boton:
         self.dimension = dimesion
         self.rect = self.imagen_surface.get_rect()
         self.rect.center = origen
+
 
     # Getters
     def get_imagen(self) -> str:
